@@ -1,4 +1,4 @@
-package com.android.testproject.aboutcanada.adapter;
+package com.android.testproject.aboutcanada.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.testproject.aboutcanada.R;
-import com.android.testproject.aboutcanada.model.GalleryItem;
-import com.android.testproject.aboutcanada.model.GalleryItemsList;
+import com.android.testproject.aboutcanada.model.dataObjects.GalleryItem;
+import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 

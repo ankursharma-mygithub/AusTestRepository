@@ -1,10 +1,13 @@
-package com.android.testproject.aboutcanada.presenter;
+package com.android.testproject.aboutcanada.model.dataManager;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.android.testproject.aboutcanada.model.GalleryItemsList;
-import com.android.testproject.aboutcanada.model.GetGalleryItemResponse;
+import com.android.testproject.aboutcanada.model.dataObjects.GalleryItem;
+import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
+import com.android.testproject.aboutcanada.presenter.interfaces.IGetDataListener;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,11 +21,11 @@ import static android.content.ContentValues.TAG;
  * Created by ankursharma on 3/5/18.
  */
 
-public class AppRetrofitHelper implements GetDataContract.IApiHelper{
+public class AppRetrofitHelper implements IApiHelper {
 
-         private GetDataContract.IGetDataListener mGetDataListener;
+         private IGetDataListener mGetDataListener;
 
-        public AppRetrofitHelper(GetDataContract.IGetDataListener listener) {
+        public AppRetrofitHelper(IGetDataListener listener) {
             mGetDataListener = listener;
         }
 
@@ -47,7 +50,7 @@ public class AppRetrofitHelper implements GetDataContract.IApiHelper{
                     public void onResponse(Call<GalleryItemsList> call, Response<GalleryItemsList> response) {
                         GalleryItemsList itemsList = response.body();
                         if (null != itemsList) {
-                            //removeNullItemsFromList(itemsList);
+                            removeNullItemsFromList(itemsList);
                             mGetDataListener.onSuccess("List Size: " + itemsList.getGalleryItems().size(), itemsList);
                         }
                     }
@@ -61,4 +64,17 @@ public class AppRetrofitHelper implements GetDataContract.IApiHelper{
 
             }
         }
+
+    /**
+     * To remove null items from the list.
+     * @param items
+     */
+    private void removeNullItemsFromList(GalleryItemsList items) {
+        //Clear out null values from the list
+        for (GalleryItem item : new ArrayList<>(items.getGalleryItems())) {
+            if (item.getDescription() == null && item.getImageUrl() == null && item.getTitle() == null) {
+                items.getGalleryItems().remove(item);
+            }
+        }
+    }
     }

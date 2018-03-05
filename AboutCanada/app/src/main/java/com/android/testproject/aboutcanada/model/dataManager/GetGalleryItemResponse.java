@@ -1,4 +1,6 @@
-package com.android.testproject.aboutcanada.model;
+package com.android.testproject.aboutcanada.model.dataManager;
+
+import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

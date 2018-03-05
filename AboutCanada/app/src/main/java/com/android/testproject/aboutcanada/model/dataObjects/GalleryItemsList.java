@@ -1,5 +1,6 @@
-package com.android.testproject.aboutcanada.model;
+package com.android.testproject.aboutcanada.model.dataObjects;
 
+import com.android.testproject.aboutcanada.model.dataObjects.GalleryItem;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

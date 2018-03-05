@@ -1,4 +1,4 @@
-package com.android.testproject.aboutcanada.model;
+package com.android.testproject.aboutcanada.model.dataObjects;
 
 /**
  * Created by ankursharma on 2/15/18.

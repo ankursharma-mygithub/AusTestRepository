@@ -1,26 +1,20 @@
-package com.android.testproject.aboutcanada.presenter;
+package com.android.testproject.aboutcanada.presenter.impl;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.android.testproject.aboutcanada.model.GetGalleryItemResponse;
-import com.android.testproject.aboutcanada.model.GalleryItemsList;
-import com.android.testproject.aboutcanada.presenter.GetDataContract.IView;
-import com.android.testproject.aboutcanada.presenter.GetDataContract.IApiHelper;
+import com.android.testproject.aboutcanada.model.dataManager.AppRetrofitHelper;
+import com.android.testproject.aboutcanada.model.dataManager.IApiHelper;
+import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
+import com.android.testproject.aboutcanada.presenter.interfaces.IGetDataListener;
+import com.android.testproject.aboutcanada.presenter.interfaces.IPresenter;
+import com.android.testproject.aboutcanada.ui.interfaces.IView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by ankursharma on 3/5/18.
  */
 
-public class GalleryItemsPresenter implements GetDataContract.IPresenter, GetDataContract.IGetDataListener {
+public class GalleryItemsPresenter implements IPresenter, IGetDataListener {
 
     private IView mGalleryView;
     private IApiHelper mDownloadHelper;
