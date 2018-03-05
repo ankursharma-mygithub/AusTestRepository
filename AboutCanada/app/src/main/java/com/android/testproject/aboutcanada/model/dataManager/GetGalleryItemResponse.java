@@ -13,6 +13,6 @@ import retrofit2.http.GET;
  * Used by the Retrofit library.
  */
 public interface GetGalleryItemResponse {
-    @GET("/s/2iodh4vg0eortkl/contacts.json")
+    @GET("/s/2iodh4vg0eortkl/facts.json")
     Call<GalleryItemsList> getItems();
 }

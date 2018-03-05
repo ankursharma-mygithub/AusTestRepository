@@ -3,24 +3,24 @@ package com.android.testproject.aboutcanada.presenter.impl;
 import android.content.Context;
 
 import com.android.testproject.aboutcanada.model.dataManager.AppRetrofitHelper;
-import com.android.testproject.aboutcanada.model.dataManager.IApiHelper;
+import com.android.testproject.aboutcanada.model.dataManager.IDataHelperContract;
 import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
 import com.android.testproject.aboutcanada.presenter.interfaces.IGetDataListener;
-import com.android.testproject.aboutcanada.presenter.interfaces.IPresenter;
-import com.android.testproject.aboutcanada.ui.interfaces.IView;
+import com.android.testproject.aboutcanada.presenter.interfaces.IPresenterContract;
+import com.android.testproject.aboutcanada.ui.interfaces.IMainActivityContract;
 
 
 /**
  * Created by ankursharma on 3/5/18.
  */
 
-public class GalleryItemsPresenter implements IPresenter, IGetDataListener {
+public class MainActivityPresenter implements IPresenterContract, IGetDataListener {
 
-    private IView mGalleryView;
-    private IApiHelper mDownloadHelper;
+    private IMainActivityContract mGalleryView;
+    private IDataHelperContract mDownloadHelper;
     
-    public GalleryItemsPresenter(IView mGetDataView){
-        this.mGalleryView = mGetDataView;
+    public MainActivityPresenter(IMainActivityContract galleryView){
+        this.mGalleryView = galleryView;
         mDownloadHelper = new AppRetrofitHelper(this);
     }
     

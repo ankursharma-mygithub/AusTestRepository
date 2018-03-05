@@ -13,12 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.android.testproject.aboutcanada.R;
-import com.android.testproject.aboutcanada.ui.interfaces.IView;
+import com.android.testproject.aboutcanada.ui.interfaces.IMainActivityContract;
 import com.android.testproject.aboutcanada.ui.adapter.GalleryItemAdapter;
 import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
-import com.android.testproject.aboutcanada.presenter.impl.GalleryItemsPresenter;
+import com.android.testproject.aboutcanada.presenter.impl.MainActivityPresenter;
 
-public class MainGalleryActivity extends AppCompatActivity implements IView {
+public class MainGalleryActivity extends AppCompatActivity implements IMainActivityContract {
 
     private static final String TAG = "MainGalleryActivity";
 
@@ -26,7 +26,7 @@ public class MainGalleryActivity extends AppCompatActivity implements IView {
     private static final String BASE_URL = "https://dl.dropboxusercontent.com/";
 
     //Presenter class
-    private GalleryItemsPresenter mPresenter;
+    private MainActivityPresenter mPresenter;
 
     //RecyclerView
     private RecyclerView mRecyclerView;
@@ -44,8 +44,12 @@ public class MainGalleryActivity extends AppCompatActivity implements IView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_gallery);
         initializeViews();
-        mPresenter = new GalleryItemsPresenter(this);
+        mPresenter = new MainActivityPresenter(this);
         getAndDisplayListOfItems();
+    }
+
+    public GalleryItemAdapter getAdapter() {
+        return mAdapter;
     }
 
     /**
@@ -117,7 +121,6 @@ public class MainGalleryActivity extends AppCompatActivity implements IView {
             updateTitleBar(items.getTitle());
             if (mRefreshing == true) {
                 //If user has refreshed, then notify adapter that dataset is changed.
-                //ToDo: First find if the data has changed, if yes then only update that set of data, don't refresh complete data set.
                 mAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 mRefreshing = false;

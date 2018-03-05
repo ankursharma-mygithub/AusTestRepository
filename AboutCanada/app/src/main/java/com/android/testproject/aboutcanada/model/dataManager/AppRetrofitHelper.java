@@ -21,7 +21,7 @@ import static android.content.ContentValues.TAG;
  * Created by ankursharma on 3/5/18.
  */
 
-public class AppRetrofitHelper implements IApiHelper {
+public class AppRetrofitHelper implements IDataHelperContract {
 
          private IGetDataListener mGetDataListener;
 
