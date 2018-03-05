@@ -5,14 +5,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.android.testproject.aboutcanada.R;
+import com.android.testproject.aboutcanada.adapter.GalleryItemAdapter;
 import com.android.testproject.aboutcanada.model.GalleryItemsList;
+import com.android.testproject.aboutcanada.presenter.GalleryItemsPresenter;
+import com.android.testproject.aboutcanada.presenter.GetDataContract;
 
-public class MainGalleryActivity extends AppCompatActivity implements IView{
+public class MainGalleryActivity extends AppCompatActivity implements GetDataContract.IView{
 
+    private static final String BASE_URL = "https://dl.dropboxusercontent.com/";
     private static final String TAG = "MainGalleryActivity";
-
+    private GalleryItemsPresenter mPresenter;
+    private boolean mRefreshing = false;
+    private GalleryItemAdapter mAdapter = null;
     private RecyclerView mRecyclerView;
     //SwipeRefreshLayout is a part of support library and is a standard way to implement
     //common pull to refresh pattern in Android
@@ -23,6 +30,8 @@ public class MainGalleryActivity extends AppCompatActivity implements IView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_gallery);
         initializeViews();
+        mPresenter = new GalleryItemsPresenter(this);
+        getDataFromUrl();
     }
 
     /**
@@ -37,15 +46,20 @@ public class MainGalleryActivity extends AppCompatActivity implements IView{
 
             @Override
             public void onRefresh() {
-                //TODO: When user refreshes the list by pulling down
+                mRefreshing = true;
+                getDataFromUrl();
             }
         });
 
         //initialize recyclerview
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainGalleryActivity.this));
+
     }
 
+    private void getDataFromUrl() {
+        mPresenter.getDataFromURL(getApplicationContext(), BASE_URL);
+    }
     /**
      * To update the title of the action bar.
      * @param title
@@ -57,12 +71,20 @@ public class MainGalleryActivity extends AppCompatActivity implements IView{
     }
 
     @Override
-    public void onGetDataSuccess(String message, GalleryItemsList list) {
-        //Todo: To implement
+    public void onGetDataSuccess(String message, GalleryItemsList items) {
+        if (mRecyclerView != null) {
+            updateTitleBar(items.getTitle());
+            if (mRefreshing == true) {
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
+            } else {
+                mRecyclerView.setAdapter(mAdapter = new GalleryItemAdapter(this, items));
+            }
+        }
     }
 
     @Override
     public void onGetDataFailure(String message) {
-        //Todo: To implement
+        Log.d(TAG, message);
     }
 }
