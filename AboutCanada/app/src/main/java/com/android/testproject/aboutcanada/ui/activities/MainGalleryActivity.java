@@ -2,8 +2,6 @@ package com.android.testproject.aboutcanada.ui.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,18 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.android.testproject.aboutcanada.Constants;
 import com.android.testproject.aboutcanada.R;
 import com.android.testproject.aboutcanada.ui.interfaces.IMainActivityContract;
 import com.android.testproject.aboutcanada.ui.adapter.GalleryItemAdapter;
-import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
 import com.android.testproject.aboutcanada.presenter.impl.MainActivityPresenter;
 
 public class MainGalleryActivity extends AppCompatActivity implements IMainActivityContract {
 
     private static final String TAG = "MainGalleryActivity";
-
-    //Base URL to download the data.
-    private static final String BASE_URL = "https://dl.dropboxusercontent.com/";
 
     //Presenter class
     private MainActivityPresenter mPresenter;
@@ -48,39 +43,12 @@ public class MainGalleryActivity extends AppCompatActivity implements IMainActiv
         getAndDisplayListOfItems();
     }
 
-    public GalleryItemAdapter getAdapter() {
-        return mAdapter;
-    }
-
     /**
      * Ask presenter to get the data from the specified URL.
      */
     private void getAndDisplayListOfItems() {
-        if(isNetworkConnected()) {
-            if(mPresenter != null) {
-                mPresenter.getDataFromURL(getApplicationContext(), BASE_URL);
-            }
-        } else {
-                Log.e(TAG, "Device not connected to internet.");
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainGalleryActivity.this);
-                //To handle use case where user tries to refresh the view and device is not connected.
-                int messageId = R.string.internet_dialog_msg;
-                if(mRefreshing) {
-                    messageId = R.string.internet_refresh_msg;
-                    mRefreshing = false;
-                }
-                builder.setTitle(R.string.internet_dialog_title)
-                        .setMessage(messageId)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
-                        .show();
-
-            }
-        }
+        mPresenter.getDataFromURL(getApplicationContext(), Constants.BASE_URL);
+    }
 
 
     /**
@@ -91,7 +59,6 @@ public class MainGalleryActivity extends AppCompatActivity implements IMainActiv
         //initialize swipe refresh layout
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh() {
                 mRefreshing = true;
@@ -104,48 +71,43 @@ public class MainGalleryActivity extends AppCompatActivity implements IMainActiv
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainGalleryActivity.this));
     }
 
-
-    /**
-     * To update the title of the action bar.
-     * @param title
-     */
-    private void updateTitleBar(String title) {
-        if(title != null) {
-            getSupportActionBar().setTitle(title);
-        }
+    public void stopRefreshing() {
+        mSwipeRefreshLayout.setRefreshing(false);
+        mRefreshing = false;
     }
 
     @Override
-    public void onGetDataSuccess(String message, GalleryItemsList items) {
-        if (mRecyclerView != null && items != null) {
-            updateTitleBar(items.getTitle());
-            if (mRefreshing == true) {
-                //If user has refreshed, then notify adapter that dataset is changed.
-                mAdapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(false);
-                mRefreshing = false;
-            } else {
-                mRecyclerView.setAdapter(mAdapter = new GalleryItemAdapter(this, items));
-            }
-        }
-    }
-
-    @Override
-    public void onGetDataFailure(String message) {
+    public void displayListOfItems() {
         if(mRefreshing) {
-            mRefreshing = false;
+            stopRefreshing();
         }
-        Log.e(TAG, message);
+        mRecyclerView.setAdapter(mAdapter = new GalleryItemAdapter(mPresenter));
     }
 
-    /**
-     * Check if the device is connected to internet or not.
-     */
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    @Override
+    public void showErrorDialog(String errorMessage) {
+        Log.e(TAG, "Device not connected to internet.");
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainGalleryActivity.this);
+        //To handle use case where user tries to refresh the view and device is not connected.
+        builder.setTitle(R.string.internet_dialog_title)
+                .setMessage(errorMessage)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .show();
     }
+
+    @Override
+    public void updateTitleBar(String titleText) {
+        if(titleText != null && !titleText.isEmpty()) {
+            getSupportActionBar().setTitle(titleText);
+        }
+    }
+
+
 
 
 }

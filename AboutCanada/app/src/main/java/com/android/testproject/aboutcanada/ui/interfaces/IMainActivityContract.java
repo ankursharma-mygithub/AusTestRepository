@@ -7,6 +7,7 @@ import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
  */
 
 public interface IMainActivityContract {
-    void onGetDataSuccess(String message, GalleryItemsList list);
-    void onGetDataFailure(String message);
+    void updateTitleBar(String titleText);
+    void displayListOfItems();
+    void showErrorDialog(String errorMessage);
 }

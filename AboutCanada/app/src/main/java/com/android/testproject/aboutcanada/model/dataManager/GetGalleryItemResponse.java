@@ -1,5 +1,6 @@
 package com.android.testproject.aboutcanada.model.dataManager;
 
+import com.android.testproject.aboutcanada.Constants;
 import com.android.testproject.aboutcanada.model.dataObjects.GalleryItemsList;
 
 import retrofit2.Call;
@@ -13,6 +14,6 @@ import retrofit2.http.GET;
  * Used by the Retrofit library.
  */
 public interface GetGalleryItemResponse {
-    @GET("/s/2iodh4vg0eortkl/facts.json")
+    @GET(Constants.API_END_POINT)
     Call<GalleryItemsList> getItems();
 }

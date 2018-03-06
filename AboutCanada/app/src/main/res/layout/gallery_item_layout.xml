@@ -29,6 +29,7 @@
         android:background="@android:color/darker_gray"
         android:contentDescription="icon"
         android:scaleType="centerCrop"
+        android:visibility="invisible"
         />
 
     <TextView
